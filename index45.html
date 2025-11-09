@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taktyki Gier Planszowych</title>
+<meta name="description" content="Taktyki i strategie do gier planszowych takich jak Azul i Splendor. Dołącz do turniejów i rozwijaj swoje umiejętności.">
+<meta name="keywords" content="gry planszowe, strategie, Azul, Splendor, turnieje, taktyki">
+<meta name="author" content="Caamilek">
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3069/3069186.png" type="image/png">
+
+<style>
+/* --- RESET --- */
+*{margin:0;padding:0;box-sizing:border-box;}
+body,html{height:100%;font-family:"Segoe UI",Arial,sans-serif;scroll-behavior:smooth;overflow-x:hidden;transition:background 0.5s,color 0.5s;}
+body.dark{background:#1e1e1e;color:#f5f5f5;}
+a{text-decoration:none;color:#2E8B57;}
+a:hover{color:#00cc66;}
+a:visited{color:#2E8B57;}
+body{scroll-snap-type:y proximity;}
+
+/* --- MENU --- */
+.menu-btn,.dark-toggle{
+  position:fixed;
+  top:65px;
+  background:rgba(0,0,0,0.5);
+  border:2px
+  solid #fff;
+  border-radius:5px;
+  color:#fff;
+  font-size:18px;
+  padding:8px 14px;
+  cursor:pointer;
+  z-index:3000;
+  transition:.3s;
+}
+
+.menu-btn{left:20px;}
+.dark-toggle{right:20px;}
+.menu-btn:hover,.dark-toggle:hover{background-color:#2E8B57;}
+.menu-list{
+  position:fixed;
+  top: 140px;
+  left:30px;
+  list-style:none;
+  background:rgba(0,0,0,0.6);
+  border-radius:8px;
+  padding:10px;
+  display:none;
+  z-index:2500;
+}
+.menu-list.active{display:block;}
+.menu-list li{margin:8px 0;}
+.menu-list li a{color:#fff;font-size:18px;}
+.menu-list li a:hover{color:#00cc66;}
+
+/* --- SEKCJE --- */
+.section{
+  width:100%;height:100vh;position:relative;overflow:hidden;
+  display:flex;justify-content:center;align-items:flex-end;scroll-snap-align:start;
+}
+.section img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;filter:brightness(0.6);opacity:0;transition:opacity 1s ease;}
+.section.active img{opacity:1;}
+.slide-info{
+  position:absolute;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.65);
+  color:#fff;text-align:center;padding:20px 15px;
+  opacity:0;transform:translateY(40px);transition:all .8s ease;
+}
+.section.active .slide-info{opacity:1;transform:translateY(0);}
+.slide-text{
+  position:relative;text-align:center;margin-bottom:100px;
+  opacity:0;transform:translateY(40px);transition:.8s ease;z-index:10;
+}
+.section.active .slide-text{opacity:1;transform:translateY(0);}
+.slide-text .btn{
+  text-decoration:none;background:#2E8B57;color:#fff;
+  padding:10px 20px;border-radius:5px;font-weight:bold;transition:.3s;margin:0 5px;
+}
+.slide-text .btn:hover{background:#00cc66;}
+
+/* --- TURNIEJE --- */
+#turnieje{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.tournament-container{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:40px;
+  max-width:1000px;
+  padding:20px;
+  z-index:10;
+}
+
+.tournament-box{
+  background:rgba(0,0,0,0.7);padding:25px;border-radius:10px;
+  color:#fff;width:300px;text-align:center;
+  box-shadow:0 0 10px rgba(0,0,0,0.5);
+  opacity:0;transform:translateX(-100px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.section.active .tournament-box{opacity:1;transform:translateX(0);}
+.tournament-box:nth-child(2){transition-delay:.2s;}
+.tournament-box:nth-child(3){transition-delay:.4s;}
+.tournament-box h3{font-size:24px;color:#90EE90;margin-bottom:10px;}
+.tournament-box p{font-size:16px;margin-bottom:12px;}
+.tournament-box a{
+  background:#2E8B57;color:#fff;padding:8px 15px;
+  border-radius:5px;font-weight:bold;display:inline-block;transition:.3s;
+}
+.tournament-box a:hover{background:#00cc66;}
+.btn-group{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.history-btn{background-color:#4682B4!important;}
+.history-btn:hover{background-color:#1E90FF!important;}
+
+/* --- ABOUT / CONTACT --- */
+.about-section,.contact-section{
+  min-height:100vh;display:flex;justify-content:center;align-items:center;
+  padding:50px 20px;text-align:center;
+  background:linear-gradient(to right,#f6e6ff,#d5f4e6);
+}
+.about-content h2,.contact-content h2{font-size:36px;margin-bottom:20px;color:#2E8B57;}
+.about-content p,.contact-content p{font-size:18px;line-height:1.6;}
+
+/* --- MODALE --- */
+#azulModal .close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: #2E8B57;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.strategy-modal{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.4s;
+  z-index:999;
+  overflow-y: auto;  /* włącz przewijanie pionowe jeśli treść jest za długa */
+
+
+}
+.strategy-modal.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.strategy-content{
+  background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);
+  border:2px solid rgba(255,255,255,0.3);
+  border-radius:12px;
+  padding:30px;
+  max-width:800px;width:90%;
+  color:#fff;
+  text-align:center;
+  box-shadow:0 0 20px rgba(0,0,0,0.5);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+.strategy-content h2{margin-bottom:15px;color:#90EE90;}
+.close-btn{
+  background-color:#2E8B57;color:#fff;border:none;padding:10px 25px;
+  border-radius:8px;font-weight:bold;cursor:pointer;transition:background .3s;
+}
+.close-btn:hover{background-color:#00cc66;}
+
+/* --- DWIE KOLUMNY --- */
+.columns-wrapper{display:flex;gap:30px;flex-wrap:wrap;}
+.column{
+  flex:1;background:rgba(255,255,255,0.08);border-radius:10px;padding:20px;
+  box-shadow:inset 0 0 10px rgba(0,0,0,0.3);
+  opacity:0;transform:translateY(40px);transition:all .6s ease;
+}
+.strategy-modal.active .column{opacity:1;transform:translateY(0);}
+.column h2{color:#90EE90;margin-bottom:10px;font-size:22px;}
+
+/* --- SEZONY --- */
+.season-toggle{
+  background:#2E8B57;color:#fff;border:none;padding:10px 15px;
+  width:100%;text-align:left;cursor:pointer;font-size:16px;
+  border-radius:8px;margin-top:10px;transition:background .3s;
+}
+.season-toggle:hover{background:#00cc66;}
+.season-toggle.active{background:#90EE90;color:#000;}
+.month-list{
+  list-style:none;padding-left:20px;margin:5px 0 10px;
+  max-height:0;overflow:hidden;transition:max-height .4s,opacity .4s;opacity:0;
+}
+.month-list.show{opacity:1;max-height:500px;}
+.month-list li{padding:5px 0;color:#fff;}
+
+/* --- RESPONSYWNOŚĆ --- */
+@media(max-width:900px){
+  .tournament-container{flex-direction:column;gap:20px;}
+  .tournament-box{width:90%;}
+  .columns-wrapper{flex-direction:column;}
+  .slide-text{margin-bottom:60px;}
+}
+/* RESPONSYWNOŚĆ KALKULATORA */
+.app-window {
+  width: 100%;
+  max-width: 550px;
+}
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+}
+.tile {
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+}
+.tile img {
+  width: 80%;
+  height: auto;
+}
+input {
+  font-size: 16px;
+  width: 45px;
+}
+@media (max-width: 600px) {
+  .app-header h1 { font-size: 16px; }
+  #reset { font-size: 14px; }
+  .remaining { font-size: 12px; }
+}
+/* === DOPASOWANIE KALKULATORA AZUL DO MODALU === */
+.azul-calculator-content {
+  width: 95%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  padding: 20px;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  position: relative;
+
+  /* 🔹 Dodane wyrównanie centralne */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === MODAL KALKULATORA AZUL === */
+#azulCalculatorModal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: .4s;
+  z-index: 999;
+}
+
+#azulCalculatorModal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* Czytelniejsze kolory w kalkulatorze */
+.azul-calculator-content .app-window {
+  color: #000; /* czarny tekst na jasnym tle */
+}
+
+.azul-calculator-content .app-header h1 {
+  color: #fff; /* biały tytuł w niebieskim nagłówku */
+}
+
+.azul-calculator-content input
+.azul-calculator-content .remaining {
+  color: #000;
+}
+
+
+/* Kalkulator w modalu */
+.azul-calculator-content .app-window {
+  background: #f3f3f3;
+  border-radius: 14px;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  border: 1px solid #b4b4b4;
+}
+
+.azul-calculator-content .app-header {
+  background: #4287f5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+}
+
+.azul-calculator-content .app-header img {
+  height: 36px;
+  margin-right: 10px;
+}
+
+.azul-calculator-content .app-header h1 {
+  flex: 1;
+  font-size: 18px;
+  text-align: left;
+}
+
+.azul-calculator-content #info-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  color: #4287f5;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Responsywność kalkulatora */
+@media (max-width: 600px) {
+  .azul-calculator-content .app-header h1 {
+    font-size: 16px;
+  }
+  .azul-calculator-content .board {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  }
+  .azul-calculator-content .tile img {
+    width: 70%;
+  }
+  .azul-calculator-content input {
+    width: 40px;
+    font-size: 14px;
+  }
+}
+/* === STOPKA KALKULATORA (RESET + ZAMKNIJ NA DOLE) === */
+.calculator-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border-top: 1px solid #ccc;
+  background: #f9f9f9;
+  margin-top: 20px;
+}
+
+.calculator-footer button {
+  background-color: #2E8B57;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.calculator-footer button:hover {
+  background-color: #00cc66;
+}
+
+input.error {
+  border: 2px solid #ff4c4c !important; /* czerwone obramowanie */
+  background-color: rgba(255, 0, 0, 0.1); /* delikatne tło */
+}
+
+.accordion-btn {
+  background: #2E8B57;       /* ciemna zieleń przycisku */
+  color: #fff;                /* przycisk biały, dobrze kontrastuje */
+  cursor: pointer;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  text-align: center;
+  font-size: 16px;
+  transition: 0.3s;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.accordion-btn:hover {
+  background: #00cc66;       /* jaśniejsza zieleń na hover */
+}
+
+.accordion-content {
+  padding: 15px;
+  display: none;
+  overflow-y: auto; /* pozwala przewijać treść, jeśli jest za długa */
+  max-height: 60vh; /* ograniczenie wysokości, aby scroll się pojawił */
+  background: transparent; /* przezroczystość */
+  color: #ffffff; /* kontrastujący, czytelny tekst */
+  margin-bottom: 5px;
+  border-radius: 0 0 5px 5px;
+  position: relative; /* dla przycisku zamknij wewnątrz */
+  text-align: center;
+}
+
+
+
+.accordion-content ul {
+  margin: 10px 0;
+  padding-left: 20px;
+  list-style: disc;
+  color: #ffffff;               /* jednolity kolor listy */
+  text-align: center;
+}
+
+.accordion-content p {
+  margin-top: 10px;
+  color: #ffffff;               /* jednolity kolor tekstu */
+  text-align: center;
+}
+.close-accordion {
+  position: sticky;   /* przyklejony przy przewijaniu */
+  bottom: 0;          /* zawsze u dołu kontenera */
+  display: block;
+  margin: 10px auto 0 auto;
+  padding: 8px 20px;
+  background: #2E8B57;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.close-accordion:hover {
+  background: #00cc66;
+}
+/* === TURNIEJE AZUL - DWIE KOLUMNY - MODAL  === */ 
+/* Kolumny - przezroczyste tło */
+.tournaments-columns .column {
+  flex: 1 1 45%;
+  background-color: transparent; /* teraz widać tło strony */
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  
+}
+
+/* Lista turniejów */
+.tournament-list li {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background-color: transparent; /* przezroczyste tło */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #fff; /* tekst kontrastowy */
+}
+
+/* Przyciski pozostają jak w akordeonie */
+.btn.small-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 0.85em;
+  background-color: #2E8B57;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto; /* wycentrowanie przycisku */
+  transition: background-color 0.3s ease;
+}
+
+.btn.small-btn:hover {
+  background-color: #00cc66;
+}
+.tournaments-columns {
+display: flex;
+flex-wrap: wrap;            /* umożliwia responsywne przechodzenie kolumn pod siebie */
+justify-content: space-between;
+gap: 20px;
+}
+
+/* Pasek aktualności */
+.news-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2000;
+  background: transparent;
+  color: #fff;
+  border-bottom: 2px transparent;
+  overflow: hidden;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+/* Ruchomy tekst */
+.news-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: scrollText 25s linear infinite;
+  font-size: 15px;
+  font-weight: 500;
+}
+.news-marquee:hover {
+  animation-play-state: paused;
+}
+
+
+@keyframes scrollText {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* Styl linków w pasku */
+.news-banner a {
+  color: #FFD700;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* Zapobiegamy zakrywaniu nagłówka */
+header {
+  margin-top: 45px; /* dopasuj do wysokości paska */
+}
+
+
+
+
+</style>
+</head>
+
+<body>
+<!-- Pasek aktualności z przesuwającym się tekstem -->
+<div class="news-banner">
+  <div class="news-marquee">
+    🎉 Nowy turniej Azul już <strong>14 listopada</strong>! 
+    <a href="#azul">Zapisz się tutaj</a> 🏆 &nbsp;|&nbsp; 
+    🧩 Nowe strategie Splendor dostępne w sekcji taktyki! &nbsp;|&nbsp;
+    🌙 Tryb ciemny zyskał nowy wygląd — sprawdź! &nbsp;|&nbsp;
+    🎲 Dołącz do społeczności planszówkowej już dziś!
+  </div>
+</div>
+
+
+<!-- Nawigacja -->
+<button class="menu-btn">☰</button>
+<button class="dark-toggle">🌙</button>
+
+<ul class="menu-list" id="menuList">
+  <li><a href="#azul">AZUL</a></li>
+  <li><a href="#splendor">SPLENDOR</a></li>
+  <li><a href="#middleages">MIDDLE AGES</a></li>
+  <li><a href="#onas">INFO</a></li>
+  <li><a href="#kontakt">KONTAKT</a></li>
+</ul>
+
+<!-- SEKCJA AZUL -->
+<section class="section" id="azul">
+  <img src="https://cf.geekdo-images.com/-69xmL8Kawid8RF20Ye-wA__imagepage/img/QfQgpOaLc-oqYFs9t6nsCq6k71o=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4120378.jpg" alt="Plansza do gry Azul" loading="lazy">
+  <div class="slide-text">
+    <button class="btn open-modal" data-modal="#azulModal">Plan Gry </button>
+    <button id="open-azul-calculator" class="btn">Kalkulator Azul</button>
+    <button class="btn open-modal" data-modal="#azulTournamentsModal">Turnieje</button>
+  </div>
+  <div class="slide-info">
+    <h2>AZUL</h2>
+    <p>Twórz piękne mozaiki z kolorowych płytek i zdobywaj punkty za kompletne wzory, pełne rzędy, kolumny i zestawy kolorów. Strategia i estetyka w jednym!</p>
+  </div>
+</section>
+<!-- Akordeon dla taktyki Azul -->
+ 
+<div class="strategy-modal" id="azulModal">
+    <div class="strategy-content">
+      <h2>🎯 Plan gry  — 5 rund</h2>
+  
+      <div class="rounds">
+        <!-- Runda 1 -->
+        <button class="accordion-btn">🧭 Runda 1 – Fundamenty</button>
+        <div class="accordion-content">
+          <ul>
+            Zbuduj bazę do punktowania w późniejszych rundach<br><br>
+            Wybieraj kolory, których jest dużo na stole<br><br>
+            Skup się na środkowych kolumnach (3, 4)<br><br>
+            Układaj po 2–3 płytki, unikaj przepełnienia<br><br>
+          
+            <p>✅ Rezultat: 1–2 wiersze częściowo ułożone, 0–1 punktu kary.</p>
+          <button class="close-accordion">Zamknij</button>
+        </div>
+  
+        <!-- Runda 2 -->
+        <button class="accordion-btn">🧭 Runda 2 – Planowanie wzoru</button>
+        <div class="accordion-content">
+          
+            Przygotuj przestrzeń pod długoterminowe kolumny<br><br>
+            Dobierz kolory pasujące do rozpoczętych wierszy<br><br>
+            Ukończ 1 wiersz, by zdobyć premię<br><br>
+            Obserwuj przeciwników i blokuj potrzebne im kolory<br><br>
+          
+          <p>✅ Rezultat: 2–3 wiersze częściowo gotowe, 1 pełny wiersz.</p>
+          <button class="close-accordion">Zamknij</button>
+        </div>
+  
+        <!-- Runda 3 -->
+        <button class="accordion-btn">🧭 Runda 3 – Punkty z połączeń</button>
+        <div class="accordion-content">
+          
+          Układaj płytki tak, by łączenia pionowe i poziome dawały dodatkowe punkty<br><br>
+          Możesz poświęcić 1–2 punkty kary, jeśli ukończysz kolumnę lub wiersz<br><br>
+          Przygotuj alternatywne kolory, jeśli zaczyna ich brakować<br><br>
+          
+          <p>✅ Rezultat: 2 ukończone wiersze, początek 1–2 kolumn, 1 kolor z trzema płytkami.</p>
+          <button class="close-accordion">Zamknij</button>
+        </div>
+  
+        <!-- Runda 4 -->
+        <button class="accordion-btn">🧭 Runda 4 – Maksymalizacja punktów</button>
+        <div class="accordion-content">
+          <ul>
+            Ukończ pierwszą kolumnę (7 pkt)<br><br>
+            Zbieraj brakujące kolory, by dokończyć zestawy<br><br>
+            Nie bierz za dużo — minimalizuj ryzyko kary<br><br>
+          
+          <p>✅ Rezultat: 3–4 pełne wiersze, 1 kolumna ukończona, plan na ostatnią rundę.</p>
+          <button class="close-accordion">Zamknij</button>
+        </div>
+  
+        <!-- Runda 5 -->
+        <button class="accordion-btn">🧭 Runda 5 – Finał</button>
+        <div class="accordion-content">
+          
+            Ukończ kolory i kolumny, maksymalizując punkty końcowe<br><br>
+            Ryzykuj lekko — kara -1 lub -2 jest akceptowalna, jeśli kończysz kolumnę lub kolor<br><br>
+            Nie zostawiaj pustych miejsc — każda płytka = potencjalne punkty<br><br>
+          
+          <p>✅ Rezultat: 5+ pełnych wierszy, 2 kolumny, 1–2 ukończone kolory.</p>
+        <button class="close-accordion">Zamknij</button>
+        </div>
+      </div>
+  
+      <button class="close-btn" data-close="#azulModal">Zamknij</button>
+    </div>
+  </div>
+  
+
+<!-- === MODAL KALKULATORA AZUL === -->
+<div class="strategy-modal" id="azulCalculatorModal">
+    <div class="strategy-content azul-calculator-content">
+  
+      <div class="app-window">
+        <div class="app-header">
+          <img src="https://x.boardgamearena.net/data/gamemedia/azul/title/en_2000.png?h=1651660181" alt="Azul Logo">
+          <h1>Kalkulator Płytek Azul</h1>
+          <button id="info-btn">i</button>
+        </div>
+  
+        <div class="app-content">
+          <div id="round-counter">Runda 1</div>
+          <div id="total"></div>
+          <div class="board" id="board"></div>
+          <div id="history-box"></div>
+  
+          <!-- 🔽 Nowa sekcja stopki z przyciskami -->
+          <div class="calculator-footer">
+            <button id="reset">RESET</button>
+            <button class="close-btn" data-close="#azulCalculatorModal">Zamknij </button>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+<!-- === MODAL TURNIEJE AZUL === -->
+<div class="strategy-modal" id="azulTournamentsModal">
+  <div class="strategy-content">
+    <h2>Turnieje Azul</h2>
+
+    <div class="tournaments-columns">
+  
+<!-- Lewa kolumna: nadchodzące turnieje -->
+<div class="column upcoming">
+  <h3>Nadchodzące turnieje</h3>
+  <ul class="tournament-list">
+    <li>
+      <span class="tournament-date">14 Listopada 2025</span>Azulejos • Azul League [BGA]
+      <a href="https://boardgamearena.com/tournament?id=489766" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+    <li>
+      <span class="tournament-date">📅 Grudzień 2025</span> — Mistrzostwa lokalne w Warszawie
+      <a href="https://twojastrona.pl/zapis-turniej-2" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+    <li>
+      <span class="tournament-date">📅 5 grudnia 2025</span> — Turniej weekendowy online
+      <a href="https://twojastrona.pl/zapis-turniej-3" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+  </ul>
+</div>
+ <!-- Prawa kolumna: historyczne -->
+<div class="column past">
+  <h3>Historyczne turnieje</h3>
+    <ul>
+      <li>15 października 2025 — Turniej online</li>
+      <li>1 października 2025 — Mistrzostwa lokalne w Krakowie</li>
+      <li>20 września 2025 — Turniej weekendowy</li>
+       </ul>
+        </div>
+          </div>
+    
+    <button class="close-btn" data-close="#azulTournamentsModal">Zamknij </button>
+  </div>
+</div>
+
+<!-- SPLENDOR -->
+<section class="section" id="splendor">
+  <img src="https://cf.geekdo-images.com/dza4hbgXqVqaJtDzXmdpig__imagepage/img/bloVxq4U_mODNxwgEx4NxM02WnM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1916681.jpg" alt="Gra Splendor" loading="lazy">
+  <div class="slide-text"><button class="btn open-modal" data-modal="#splendorModal">Plan Gry</button></div>
+  <div class="slide-text"><button class="btn open-modal" data-modal="#splendorTournamentsModal">Turnieje</button></div>
+  <div class="slide-info">
+    <h2>SPLENDOR</h2>
+    <p>Buduj silnik zasobów, planuj rozwój i celuj w karty o wysokiej wartości.</p>
+  </div>
+</section>
+
+<!-- MODAL SPLENDOR -->
+<div class="strategy-modal" id="splendorModal">
+  <div class="strategy-content two-columns">
+    <div class="columns-wrapper">
+      <div class="column">
+        <h2>Podstawowe Taktyki 💎</h2>
+        <p>💠 Kupuj tanie karty generujące stałe bonusy.<br>💠 Obserwuj cele szlachty i planuj pod nie.<br>💠 Rezerwuj strategiczne karty.</p>
+      </div>
+      <div class="column">
+        <h2>Zaawansowane Porady ⚡</h2>
+        <p>🔹 Zbalansuj kolory żetonów.<br>🔹 W końcówce skup się na kartach punktowych.<br>🔹 Blokuj żetony kluczowe dla rywali.</p>
+      </div>
+    </div>
+    <button class="close-btn" data-close="#splendorModal">Zamknij</button>
+  </div>
+</div>
+
+<!-- === MODAL TURNIEJE SPLENDOR === -->
+<div class="strategy-modal" id="splendorTournamentsModal">
+  <div class="strategy-content">
+    <h2>Turnieje Splendor</h2>
+
+    <div class="tournaments-columns">
+  
+<!-- Lewa kolumna: nadchodzące turnieje -->
+<div class="column upcoming">
+  <h3>Nadchodzące turnieje</h3>
+  <ul class="tournament-list">
+    <li>
+      <span class="tournament-date">14 Listopada 2025</span>Azulejos • Azul League [BGA]
+      <a href="https://boardgamearena.com/tournament?id=489766" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+    <li>
+      <span class="tournament-date">📅 Grudzień 2025</span> — Mistrzostwa lokalne w Warszawie
+      <a href="https://twojastrona.pl/zapis-turniej-2" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+    <li>
+      <span class="tournament-date">📅 5 grudnia 2025</span> — Turniej weekendowy online
+      <a href="https://twojastrona.pl/zapis-turniej-3" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+  </ul>
+</div>
+ <!-- Prawa kolumna: historyczne -->
+<div class="column past">
+  <h3>Historyczne turnieje</h3>
+    <ul>
+      <li>15 października 2025 — Turniej online</li>
+      <li>1 października 2025 — Mistrzostwa lokalne w Krakowie</li>
+      <li>20 września 2025 — Turniej weekendowy</li>
+       </ul>
+        </div>
+          </div>
+    
+    <button class="close-btn" data-close="#splendorTournamentsModal">Zamknij </button>
+  </div>
+</div>
+<!-- SEKCJA MIDDLEAGES -->
+<section class="section" id="middleages">
+  <img src="https://cf.geekdo-images.com/f-Fgc16niFhDT6gqSTzCdg__imagepage@2x/img/nZm1C8C4gyxpFIH1NzLvG01XSTI=/fit-in/1800x1200/filters:strip_icc()/pic8792655.jpg" alt="Plansza do gry Azul" loading="lazy">
+  <div class="slide-text">
+    <button class="btn open-modal" data-modal="#middleagesTournamentsModal">Turnieje</button>
+  </div>
+  <div class="slide-info">
+    <h2>MIDDLE AGES </h2>
+    <p>Rozbudowuj swoje lenno kafelek po kafelku, aby stać się najbogatszym szlachcicem w królestwie! </p>
+  </div>
+</section>
+
+<!-- === MODAL TURNIEJE MIDDLE AGES === -->
+<div class="strategy-modal" id="middleagesTournamentsModal">
+  <div class="strategy-content">
+    <h2>Turnieje Splendor</h2>
+
+    <div class="tournaments-columns">
+  
+<!-- Lewa kolumna: nadchodzące turnieje -->
+<div class="column upcoming">
+  <h3>Nadchodzące turnieje</h3>
+  <ul class="tournament-list">
+    <li>
+      <span class="tournament-date">14 Listopada 2025</span>Azulejos • Azul League [BGA]
+      <a href="https://boardgamearena.com/tournament?id=489766" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+    <li>
+      <span class="tournament-date">📅 Grudzień 2025</span> — Mistrzostwa lokalne w Warszawie
+      <a href="https://twojastrona.pl/zapis-turniej-2" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+    <li>
+      <span class="tournament-date">📅 5 grudnia 2025</span> — Turniej weekendowy online
+      <a href="https://twojastrona.pl/zapis-turniej-3" target="_blank" class="btn small-btn">Zapisz się</a>
+    </li>
+  </ul>
+</div>
+<!-- Prawa kolumna: historyczne -->
+  <div class="column past">
+    <h3>Historyczne turnieje</h3>
+        <button class="accordion-btn">Runda 1 20/12/2024</button>
+          <div class="accordion-content">
+          🥇jiol9k
+          🥈GéLyon
+          🥉Steph3kKRK
+          </div>
+        <button class="accordion-btn">Runda 2 17/01/2025</button>
+          <div class="accordion-content">
+            🥇Mooh21
+            🥈Zeispharn
+            🥉19Duffy83
+            🥉Bansh3e  
+                </div>
+        <button class="accordion-btn">Runda 3 17/01/2025</button>
+        <div class="accordion-content">
+          🥇Mooh21
+          🥈Zeispharn
+          🥉19Duffy83
+          🥉Bansh3e  
+      </div>
+        <button class="accordion-btn">Runda 4 20/12/2024</button>
+          <div class="accordion-content">
+            🥇jiol9k
+            🥈GéLyon
+            🥉Steph3kKRK
+              </div>
+          </div>
+            </div>
+      
+      <button class="close-btn" data-close="#middleagesTournamentsModal">Zamknij </button>
+    </div>
+  </div>
+
+<!-- O NAS -->
+<section class="about-section" id="onas">
+  <div class="about-content">
+    <h2>INFO</h2>
+    <p>Strona poświecona grze Azul i Splendor gdzie znajdziesz porady oraz turnieje online na platformie BoardGameArena.</p>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section class="contact-section" id="kontakt">
+  <div class="contact-content">
+    <h2>Kontakt</h2>
+    <p>Masz pytania lub chcesz dołączyć do zespołu? <br>Napisz: <a href="mailto:kontakt@planszowestrategie.pl">kontakt@planszowestrategie.pl</a></p>
+  </div>
+</section>
+<!-- === MODAL KALKULATORA AZUL === -->
+<div class="strategy-modal" id="azulCalculatorModal">
+    <div class="strategy-content azul-calculator-content">
+      <button class="close-btn" data-close="#azulCalculatorModal" style="margin-bottom:15px;">Zamknij ✖</button>
+  
+      <div class="app-window">
+        <div class="app-header">
+          <img src="https://x.boardgamearena.net/data/gamemedia/azul/title/en_2000.png?h=1651660181" alt="Azul Logo">
+          <h1>Kalkulator Płytek Azul</h1>
+          <button id="info-btn">i</button>
+        </div>
+  
+        <div class="app-content">
+          <div id="round-counter">Runda 1</div>
+          <div id="total"></div>
+          <div class="board" id="board"></div>
+          <button id="reset">RESET</button>
+          <div id="history-box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- === MODAL INFO (Z KALKULATORA) === -->
+  <div id="modal-bg" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.55); justify-content:center; align-items:center; z-index:9999;">
+    <div id="modal-box" style="background:white; padding:18px; width:75%; max-width:380px; border-radius:10px; text-align:center; box-shadow:0 0 25px rgba(0,0,0,0.45);">
+      <h3>Informacje</h3>
+      <p><b>Stworzył Caamilek</b><br><br>
+        Użyj TAB lub ENTER aby przechodzić między kolorami.<br>
+        <b>N</b> → Nowa runda<br>
+        <b>R</b> → Reset
+      </p>
+      <button id="close-modal">Zamknij</button>
+    </div>
+  </div>
+<script>
+/* --- DARK MODE --- */
+const darkToggle = document.querySelector('.dark-toggle');
+darkToggle.onclick = () => {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+};
+if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
+
+/* --- MENU MOBILNE --- */
+const menuBtn = document.querySelector('.menu-btn');
+const menuList = document.querySelector('.menu-list');
+
+menuBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  menuList.classList.toggle('active');
+});
+
+document.addEventListener('click', e => {
+  if (!menuList.contains(e.target) && !menuBtn.contains(e.target)) {
+    menuList.classList.remove('active');
+  }
+});
+
+document.querySelectorAll('.menu-list a').forEach(link => {
+  link.addEventListener('click', () => menuList.classList.remove('active'));
+});
+
+/* --- ANIMACJE SCROLL --- */
+const sections = document.querySelectorAll('.section');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => e.target.classList.toggle('active', e.isIntersecting));
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+
+/* --- MODALE --- */
+document.querySelectorAll('.open-modal').forEach(btn => {
+  btn.onclick = () => openModal(btn.dataset.modal);
+});
+document.querySelectorAll('.close-btn').forEach(btn => {
+  btn.onclick = () => closeModal(btn.dataset.close);
+});
+
+function openModal(id) {
+  const modal = document.querySelector(id);
+  modal.classList.add('active');
+  if (id !== "#azulModal") document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  const modal = document.querySelector(id);
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+window.onclick = e => {
+  if (e.target.classList.contains('strategy-modal')) {
+    e.target.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+/* --- SEZONY --- */
+document.querySelectorAll('.season-toggle').forEach(btn => {
+  btn.onclick = () => {
+    btn.classList.toggle('active');
+    btn.nextElementSibling.classList.toggle('show');
+  };
+});
+
+/* --- KALKULATOR AZUL --- */
+const MAX = 20;
+let currentRound = 1;
+let history = [];
+
+const tiles = [
+  { name: "Niebieskie", file: "https://ik.imagekit.io/caameroon/ikona1.png?updatedAt=1762552116368" },
+  { name: "Czerwone", file: "https://ik.imagekit.io/caameroon/ikona3.png?updatedAt=1762552116366" },
+  { name: "Żółte", file: "https://ik.imagekit.io/caameroon/ikona2.png?updatedAt=1762552116375" },
+  { name: "Czarne", file: "https://ik.imagekit.io/caameroon/ikona4.png?updatedAt=1762552116372" },
+  { name: "Turkusowe", file: "https://ik.imagekit.io/caameroon/ikona5.png?updatedAt=1762552116363" }
+];
+
+let remainingTiles = {};
+let roundUsed = {};
+tiles.forEach(t => { remainingTiles[t.name] = MAX; roundUsed[t.name] = 0; });
+
+function drawBoard() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+  let totalRemaining = 0;
+
+  tiles.forEach(tile => {
+    const rem = remainingTiles[tile.name];
+    totalRemaining += rem;
+    board.innerHTML += `
+      <div class="tile ${rem < 4 && rem > 0 ? "low flash" : ""}" id="tile-${tile.name}">
+        <img src="${tile.file}" alt="${tile.name}">
+        <input type="number" min="0" max="${rem}" value="${roundUsed[tile.name]}" data-name="${tile.name}">
+        <div class="remaining">Pozostało: ${rem}</div>
+      </div>`;
+  });
+
+  document.getElementById("total").innerText = "Razem pozostało płytek w grze: " + totalRemaining;
+  document.getElementById("round-counter").innerText = "Runda " + currentRound;
+  drawHistory();
+  setupInputs();
+}
+
+function setupInputs() {
+  const inputs = Array.from(document.querySelectorAll("#azulCalculatorModal input"));
+  inputs.forEach((input, idx) => {
+    input.addEventListener("input", () => {
+      let val = Number(input.value);
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > remainingTiles[input.dataset.name]) val = remainingTiles[input.dataset.name];
+      roundUsed[input.dataset.name] = val;
+
+      const rem = remainingTiles[input.dataset.name] - val;
+      input.nextElementSibling.innerText = "Pozostało: " + rem;
+
+      const tileDiv = input.parentElement;
+      tileDiv.classList.remove("low", "flash");
+      if (rem < 4 && rem > 0) tileDiv.classList.add("low", "flash");
+    });
+
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === "Tab") {
+        e.preventDefault();
+        let nextIndex = (idx + 1) % inputs.length;
+        if (nextIndex === 0) nextRound();
+        else {
+          inputs[nextIndex].focus();
+          inputs[nextIndex].select();
+        }
+      }
+    });
+
+    input.addEventListener("focus", () => input.select());
+  });
+
+  if (inputs.length > 0) {
+    inputs[0].focus();
+    inputs[0].select();
+  }
+}
+
+function nextRound() {
+  document.querySelectorAll("#azulCalculatorModal input").forEach(i => i.classList.remove("error"));
+
+  const emptyInput = Array.from(document.querySelectorAll("#azulCalculatorModal input"))
+    .find(input => Number(input.value) <= 0);
+
+  if (emptyInput) {
+    document.querySelectorAll("#azulCalculatorModal input").forEach(input => {
+      if (Number(input.value) <= 0) input.classList.add("error");
+    });
+    emptyInput.focus();
+    emptyInput.select();
+    return;
+  }
+
+  let snapshot = {};
+  tiles.forEach(t => snapshot[t.name] = roundUsed[t.name]);
+  history.push({ round: currentRound, used: snapshot });
+
+  tiles.forEach(t => {
+    remainingTiles[t.name] -= roundUsed[t.name];
+    if (remainingTiles[t.name] < 0) remainingTiles[t.name] = 0;
+    roundUsed[t.name] = 0;
+  });
+
+  currentRound++;
+  drawBoard();
+}
+
+function drawHistory() {
+  const hist = document.getElementById("history-box");
+  if (history.length === 0) { hist.innerHTML = ""; return; }
+  hist.innerHTML = "<b>Historia rund:</b><br>" + history.map(h => {
+    let line = `Runda ${h.round}: `;
+    line += tiles.map(t => `${t.name}: ${h.used[t.name]}`).join(", ");
+    return line;
+  }).join("<br>");
+}
+
+function resetCounts() {
+  tiles.forEach(t => { remainingTiles[t.name] = MAX; roundUsed[t.name] = 0; });
+  history = [];
+  currentRound = 1;
+  drawBoard();
+}
+
+document.getElementById("reset").onclick = resetCounts;
+document.addEventListener("keydown", e => {
+  if (e.key.toLowerCase() === "n") nextRound();
+  if (e.key.toLowerCase() === "r") resetCounts();
+});
+
+document.getElementById("open-azul-calculator").onclick = () => openModal('#azulCalculatorModal');
+
+drawBoard();
+
+/* --- AKORDEONY --- */
+const acc = document.querySelectorAll(".accordion-btn");
+acc.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const content = btn.nextElementSibling;
+    content.style.display = content.style.display === "block" ? "none" : "block";
+    btn.classList.toggle('active');
+  });
+});
+
+document.querySelectorAll('.close-accordion').forEach(button => {
+  button.addEventListener('click', function() {
+    const accordionContent = this.closest('.accordion-content');
+    if (accordionContent) {
+      accordionContent.style.display = 'none';
+      const parentAccordionBtn = accordionContent.previousElementSibling;
+      if (parentAccordionBtn && parentAccordionBtn.classList.contains('accordion-btn')) {
+        parentAccordionBtn.classList.remove('active');
+      }
+    }
+  });
+});
+
+/* --- ROTACJA AKTUALNOŚCI --- */
+const newsItems = document.querySelectorAll('.news-item');
+let newsIndex = 0;
+setInterval(() => {
+  newsItems[newsIndex].classList.remove('active');
+  newsIndex = (newsIndex + 1) % newsItems.length;
+  newsItems[newsIndex].classList.add('active');
+}, 5000);
+
+</script>
+</body>
+</html>
